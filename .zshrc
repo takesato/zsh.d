@@ -1,3 +1,6 @@
+autoload -Uz compinit;compinit -u
+autoload colors
+
 function init-loader(){
   init_dir=${1:?"You have to specify a directory"}
   for config_file in $init_dir/*.zsh; do
