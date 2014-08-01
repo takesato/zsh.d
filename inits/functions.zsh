@@ -41,15 +41,33 @@ zle -N peco-snippets
 bindkey '^x^s' peco-snippets
 
 function peco-select-gitadd() {
-      local selected_file_to_add=$(git status --porcelain | \
-                peco --query "$LBUFFER" | \
-                awk -F ' ' '{print $NF}')
-          if [ -n "$selected_file_to_add" ]; then
-                  BUFFER="git add ${selected_file_to_add}"
-                        CURSOR=$#BUFFER
-                              zle accept-line
-                                  fi
-              zle clear-screen
-              }
+  local selected_file_to_add=$(git status --porcelain | \
+    peco --query "$LBUFFER" | \
+    awk -F ' ' '{print $NF}')
+  if [ -n "$selected_file_to_add" ]; then
+    BUFFER="git add ${selected_file_to_add}"
+    CURSOR=$#BUFFER
+    zle accept-line
+  fi
+  zle clear-screen
+}
 zle -N peco-select-gitadd
 bindkey "^g^a" peco-select-gitadd
+
+function peco-switch-branch() {
+  local branch=$(
+    (
+      for i in `git branch | colrm 1 2|grep -v detached`;
+      do
+        echo `git log --date=iso8601 -n 1 --pretty="format:[%ai] %h" $i` $i;
+        done
+    ) | sort -r|peco --query "$LBUFFER" | cut -f 5 -d" ")
+  if [ -n "$branch" ]; then
+    BUFFER="git checkout ${branch}"
+    CURSOR=$#BUFFER
+    zle accept-line
+  fi
+  zle clear-screen
+}
+zle -N peco-switch-branch
+bindkey '^x^b' peco-switch-branch
