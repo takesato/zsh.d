@@ -71,3 +71,16 @@ function peco-switch-branch() {
 }
 zle -N peco-switch-branch
 bindkey '^x^b' peco-switch-branch
+
+
+
+function peco-switch-tmux-session() {
+  local session=$(tmux list-session | peco | cut -d ":" -f 1)
+  if [ -n "$session" ]; then
+    `tmux switch-client -t $session`
+  fi
+  zle clear-screen
+}
+
+zle -N peco-switch-tmux-session
+bindkey '^x^w' peco-switch-tmux-session
