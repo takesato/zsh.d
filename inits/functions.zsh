@@ -32,9 +32,13 @@ bindkey '^r' peco-select-history
 alias cdd='cd `ghq list -p|peco`'
 
 function peco-snippets() {
-
-    local SNIPPETS=$(grep -v "^#" ~/.snippets | peco --query "$LBUFFER" | pbcopy)
-    zle clear-screen
+  if [ -f "`pwd`/.snippets" ]; then
+    BUFFER=$(grep -v '^#' `pwd`/.snippets ~/.snippets | sort | peco --query "$LBUFFER" | cut -d':' -f 2)
+  else
+    BUFFER=$(grep -v '^#' ~/.snippets | peco --query "$LBUFFER")
+  fi
+  CURSOR=$#BUFFER
+  zle clear-screen
 }
 
 zle -N peco-snippets
@@ -72,8 +76,6 @@ function peco-switch-branch() {
 zle -N peco-switch-branch
 bindkey '^x^b' peco-switch-branch
 
-
-
 function peco-switch-tmux-session() {
   local session=$(tmux list-session | peco | cut -d ":" -f 1)
   if [ -n "$session" ]; then
@@ -84,3 +86,38 @@ function peco-switch-tmux-session() {
 
 zle -N peco-switch-tmux-session
 bindkey '^x^w' peco-switch-tmux-session
+
+function peco-dfind() {
+  local current_buffer=$BUFFER
+  # .git系など不可視フォルダは除外
+  local selected_dir="$(find . -maxdepth 5 -type d ! -path "*/.*"| peco)"
+  if [ -d "$selected_dir" ]; then
+    BUFFER="${current_buffer} \"${selected_dir}\""
+    CURSOR=$#BUFFER
+    # ↓決定時にそのまま実行するなら
+    #zle accept-line
+  fi
+  zle clear-screen
+}
+zle -N peco-dfind
+bindkey '^x^f' peco-dfind
+
+function peco-gitbranch() {
+    local current_buffer=$BUFFER
+
+    # commiterdate:relativeを commiterdate:localに変更すると普通の時刻表示
+    local selected_line="$(git for-each-ref --format='%(refname:short) | %(committerdate:relative) | %(committername) | %(subject)' --sort=-committerdate refs/heads refs/remotes \
+        | column -t -s '|' \
+        | peco \
+        | head -n 1
+        | awk '{print $1}')"
+    if [ -n "$selected_line" ]; then
+        BUFFER="${current_buffer} ${selected_line}"
+        CURSOR=$#BUFFER
+        # ↓そのまま実行の場合
+        #zle accept-line
+    fi
+    zle clear-screen
+}
+zle -N peco-gitbranch
+bindkey '^x^g' peco-gitbranch
