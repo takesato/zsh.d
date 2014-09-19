@@ -121,3 +121,32 @@ function peco-gitbranch() {
 }
 zle -N peco-gitbranch
 bindkey '^x^g' peco-gitbranch
+
+# http://qiita.com/sona-tar/items/fe401c597e8e51d4e243
+function git-changed-files(){
+  git status --short | peco | awk '{print $2}'
+}
+alias -g F='$(git-changed-files)'
+
+function git-hash(){
+  git log --oneline --branches | peco | awk '{print $1}'
+}
+alias -g H='$(git-hash)'
+
+# http://qiita.com/syui/items/1def3293fd9a593a4e19
+function cddown_dir(){
+  com='$SHELL -c "ls -AF . | grep / "'
+  while [ $? = 0 ]
+  do
+    cdir=`eval $com | peco`
+    if [ $? = 0 ];then
+      cd $cdir
+      eval $com
+    else
+      break
+    fi
+  done
+  zle reset-prompt
+}
+zle -N cddown_dir
+bindkey '^j' cddown_dir
