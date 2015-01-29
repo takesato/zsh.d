@@ -150,3 +150,61 @@ function cddown_dir(){
 }
 zle -N cddown_dir
 bindkey '^j' cddown_dir
+
+# http://hotolab.net/blog/peco_select_path/
+function peco-select-path() {
+  local filepath="$(find . | grep -v '/\.' | peco --prompt 'PATH>')"
+  if [ "$LBUFFER" -eq "" ]; then
+    if [ -d "$filepath" ]; then
+      BUFFER="cd $filepath"
+    elif [ -f "$filepath" ]; then
+      BUFFER="$EDITOR $filepath"
+    fi
+  else
+    BUFFER="$LBUFFER$filepath"
+  fi
+  CURSOR=$#BUFFER
+  zle clear-screen
+}
+
+if [ -x "`which peco 2> /dev/null`" ]; then
+  zle -N peco-select-path
+  bindkey '^f' peco-select-path # Ctrl+f で起動
+fi
+
+# https://gist.github.com/azu/afa457540e8288f2e26e
+function peco-filefind() {
+    local current_buffer=$BUFFER
+    # .git系など不可視フォルダは除外
+    local selected_dir="$(find . -maxdepth 1 -type f | peco)"
+    if [ -e "$selected_dir" ]; then
+        BUFFER="${current_buffer} \"${selected_dir}\""
+        CURSOR=$#BUFFER
+    fi
+    zle clear-screen
+}
+zle -N peco-filefind
+bindkey '^x^f' peco-filefind
+
+function peco-dfind() {
+    local current_buffer=$BUFFER
+    # .git系など不可視フォルダは除外
+    local selected_dir="$(find . -maxdepth 5 -type d ! -path "*/.*"| peco)"
+    if [ -d "$selected_dir" ]; then
+        BUFFER="${current_buffer} \"${selected_dir}\""
+        CURSOR=$#BUFFER
+        # ↓決定時にそのまま実行するなら
+        #zle accept-line
+    fi
+    zle clear-screen
+}
+zle -N peco-dfind
+bindkey '^x^d' peco-dfind
+
+
+function git-blame-show() {
+  local hash="$(git blame ${1}| peco|cut -d " " -f1)"
+  if [ -n "$hash" ]; then
+    git show ${hash}
+  fi
+}

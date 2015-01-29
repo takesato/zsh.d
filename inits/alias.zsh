@@ -1,3 +1,5 @@
+alias reload='exec $SHELL -l'
+
 p() { peco | while read LINE; do $@ $LINE; done }
 alias o='git ls-files | p open'
 alias e='ghq list -p | p cd'
