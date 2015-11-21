@@ -13,7 +13,7 @@ function init-loader(){
   done
   return
 }
-init-loader $ZDOTDIR/inits
 if [ -e ~/.zsh.d/$HOST ];then
   source ~/.zsh.d/$HOST
 fi
+init-loader $ZDOTDIR/inits

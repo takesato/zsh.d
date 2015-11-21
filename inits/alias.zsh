@@ -17,8 +17,8 @@ alias gitroot='cd `git rev-parse --show-toplevel`'
 ####################################################################################################
 ### coreutils
 ### $ brew install coreutils
-alias ls='gls -v --color=auto'
-alias date='gdate'
+alias ls='$GLS -v --color=auto'
+alias date='$GDATE'
 
 ####################################################################################################
 ### one length shortcut
