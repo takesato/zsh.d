@@ -32,3 +32,9 @@ alias -g B='`git branch -a | peco --prompt "GIT BRANCH>" | head -n 1 | sed -e "s
 alias -g R='`git remote | peco --prompt "GIT REMOTE>" | head -n 1`'
 alias -g H='`curl -sL https://api.github.com/users/takesato/repos | jq -r ".[].full_name" | peco --prompt "GITHUB REPOS>" | head -n 1`'
 alias -g LR='`git branch -a | peco --query "remotes/ " --prompt "GIT REMOTE BRANCH>" | head -n 1 | sed "s/remotes\/[^\/]*\/\(\S*\)/\1 \0/"`'
+
+q() { qlmanage -p "$1" >& /dev/null & }
+
+alias ags='ag --csharp'
+
+code () { VSCODE_CWD="$PWD" open -n -b "com.microsoft.VSCode" --args $* }

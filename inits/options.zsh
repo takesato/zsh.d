@@ -118,3 +118,7 @@ unsetopt BG_NICE
 #zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 
 REPORTTIME=3
+
+# http://uu59.blog103.fc2.com/blog-entry-5.html
+autoload bashcompinit
+bashcompinit

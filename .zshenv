@@ -10,5 +10,5 @@ PATH=$GOPATH/bin:$PATH
 PATH=$HOME/.rbenv/bin:$HOME/.rbenv/shims:$PATH
 PATH=/usr/local/bin:/usr/local/sbin:$PATH
 PATH=~/bin:$PATH
-
+PATH=~/google-cloud-sdk/bin:$PATH
 export PATH

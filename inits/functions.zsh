@@ -169,7 +169,7 @@ function peco-select-path() {
 
 if [ -x "`which peco 2> /dev/null`" ]; then
   zle -N peco-select-path
-  bindkey '^f' peco-select-path # Ctrl+f で起動
+  bindkey '^x^p' peco-select-path # Ctrl+f で起動
 fi
 
 # https://gist.github.com/azu/afa457540e8288f2e26e
@@ -206,5 +206,13 @@ function git-blame-show() {
   local hash="$(git blame ${1}| peco|cut -d " " -f1)"
   if [ -n "$hash" ]; then
     git show ${hash}
+  fi
+}
+
+ssh() {
+  if [ -f ".ssh_config" ]; then
+    /usr/bin/ssh -F .ssh_config "$@"
+  else
+    /usr/bin/ssh  "$@"
   fi
 }

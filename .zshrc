@@ -17,3 +17,5 @@ if [ -e ~/.zsh.d/$HOST ];then
   source ~/.zsh.d/$HOST
 fi
 init-loader $ZDOTDIR/inits
+
+eval "$(direnv hook zsh)"
