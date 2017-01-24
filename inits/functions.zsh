@@ -1,10 +1,10 @@
 unixtime() {
   date_bin=gdate
-  if [ $# = 1 ]
+  if [ $# = 1 ];
   then
     ${date_bin} -d "1970/01/01 09:00:00 $1 seconds" "+%Y/%m/%d %H:%M:%S"
   else
-    ${date_bin} +%Y/%m/%d\ %H:%M:%S
+    ${date_bin} "+%Y/%m/%d\ %H:%M:%S"
   fi
 }
 
@@ -109,7 +109,7 @@ function peco-gitbranch() {
     local selected_line="$(git for-each-ref --format='%(refname:short) | %(committerdate:relative) | %(committername) | %(subject)' --sort=-committerdate refs/heads refs/remotes \
         | column -t -s '|' \
         | peco \
-        | head -n 1
+        | head -n 1 \
         | awk '{print $1}')"
     if [ -n "$selected_line" ]; then
         BUFFER="${current_buffer} ${selected_line}"

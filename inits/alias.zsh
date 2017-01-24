@@ -37,4 +37,3 @@ q() { qlmanage -p "$1" >& /dev/null & }
 
 alias ags='ag --csharp'
 
-code () { VSCODE_CWD="$PWD" open -n -b "com.microsoft.VSCode" --args $* }

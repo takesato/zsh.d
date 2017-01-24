@@ -19,3 +19,5 @@ fi
 init-loader $ZDOTDIR/inits
 
 eval "$(direnv hook zsh)"
+
+source ~/.tmuxinator/tmuxinator.zsh

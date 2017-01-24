@@ -1,1 +1,1 @@
-eval "$(direnv hook $0)"
+#eval "$(direnv hook $0)"
